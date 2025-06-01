@@ -5,6 +5,8 @@ Msat = 0 // default: no magnetisation saturation
 Aex = 3.5e-12 // J/m
 alpha = 2e-4 // LL damping constant
 
+// ============= MULTIPLEXER =============
+
 input_waveguide := Cuboid(2e-6, 300e-9, 100e-9).Transl(-1.5e-6, 0, 0)
 design_region := Cuboid(1e-6, 1e-6, 100e-9).Transl(0, 0, 0)
 output_waveguide_1 := Cuboid(2e-6, 300e-9, 100e-9).Transl(1.5e-6, 350e-9, 0)
@@ -24,12 +26,24 @@ Msat.SetRegion(2, 140e3)
 Msat.SetRegion(3, 140e3)
 Msat.SetRegion(4, 140e3)
 
+// ================= EDGE DAMPENERS =================
+
+DefRegion(5, xrange(-2.5e-6, -2.4e-6)) // input waveguide dampener
+// DefRegion(6, xrange(2.4e-6, 2.5e-6)) // output waveguide dampener
+
+alpha.SetRegion(5, 0.5)
+// alpha.SetRegion(6, 0.5)
+
+// ============= RUNNING THE SIMULATION =============
+
 Relax()
 Save(m) // Save relaxed state
 AutoSave(m, 50e-12)
 // AutoSnapshot(m, 50e-12)
 
+// Excitation region
+DefRegion(5, xrange(-2.0e-6, -1.9e-6))
 F := 2.6e9 // GHz
-B_ext.SetRegion(1, Vector(0, 0.1e-3 * sin(2 * pi * F * t), 0)) // excitation: 0.1 mT @ F GHz in y-direction, 200mT in z-direction
+B_ext.SetRegion(5, Vector(0, 0.1e-3 * sin(2 * pi * F * t), 200e-3)) // excitation: 0.1 mT @ F GHz in y-direction, 200mT in z-direction
 
-Run(1e-9)
+Run(3e-9)

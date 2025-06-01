@@ -4,8 +4,8 @@ import cv2
 image_folder = '.'  # Folder where images are stored
 output_file = 'output_video.mp4'
 start_idx = 1
-end_idx = 410
-frame_rate = 30  # FPS
+end_idx = 41
+frame_rate = 10  # FPS
 
 # Generate filename list
 filenames = [fr"C:\Sun Zizhuo\Code\mumax\NRP\main.out/m{str(i).zfill(6)}.jpg" for i in range(start_idx, end_idx)]
