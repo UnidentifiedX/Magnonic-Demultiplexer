@@ -12,12 +12,13 @@ class Dimension(Enum):
 # settings
 INPUT_DIR = './main.out'
 OUTPUT_VIDEO = 'fluctuation_video.mp4'
-FRAME_COUNT = 82
+FRAME_COUNT = 41
 FPS = 10
 DIMENSION = Dimension.X.value
 Z_SLICE = 5
+FILE_PREFIX = "m"
 
-ref_frame = np.load(os.path.join(INPUT_DIR, 'm000000.npy'))[DIMENSION, Z_SLICE]
+ref_frame = np.load(os.path.join(INPUT_DIR, f'{FILE_PREFIX}000000.npy'))[DIMENSION, Z_SLICE]
 height, width = ref_frame.shape
 
 video_writer = cv2.VideoWriter(
@@ -38,7 +39,7 @@ def to_bgr_image(array2d):
 
 # === Loop through frames and write video ===
 for i in range(FRAME_COUNT):
-    filepath = os.path.join(INPUT_DIR, f'm{i:06d}.npy')
+    filepath = os.path.join(INPUT_DIR, f'{FILE_PREFIX}{i:06d}.npy')
     data_slice = np.load(filepath)[DIMENSION, Z_SLICE]
     fluct = data_slice - ref_frame
     frame_img = to_bgr_image(fluct)
