@@ -29,10 +29,10 @@ Msat.SetRegion(4, 140e3)
 // ================= EDGE DAMPENERS =================
 
 DefRegion(5, xrange(-2.5e-6, -2.4e-6)) // input waveguide dampener
-// DefRegion(6, xrange(2.4e-6, 2.5e-6)) // output waveguide dampener
+DefRegion(6, xrange(2.4e-6, 2.5e-6)) // output waveguide dampener
 
 alpha.SetRegion(5, 0.5)
-// alpha.SetRegion(6, 0.5)
+alpha.SetRegion(6, 0.5)
 
 // ============= RUNNING THE SIMULATION =============
 
@@ -46,4 +46,4 @@ DefRegion(5, xrange(-2.0e-6, -1.9e-6))
 F := 2.6e9 // GHz
 B_ext.SetRegion(5, Vector(0, 0.1e-3 * sin(2 * pi * F * t), 200e-3)) // excitation: 0.1 mT @ F GHz in y-direction, 200mT in z-direction
 
-Run(3e-9)
+Run(4e-9)

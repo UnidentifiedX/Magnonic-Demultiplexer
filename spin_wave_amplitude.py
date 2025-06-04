@@ -2,30 +2,37 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 import os
+from enum import Enum
 
-def get_normalised_frame(frame):
-    # amplitude = np.sqrt(frame[0]**2 + frame[1]**2)
-    amplitude = frame[0] # mx
+class Dimension(Enum):
+    X = 0
+    Y = 1
+    Z = 2
+
+# Settings
+FRAME_COUNT = 22
+INPUT_DIR = './main.out'
+OUTPUT_VIDEO = 'spin_wave_cv2.mp4'
+FPS = 10
+DIMENSION = Dimension.X.value # adjust for different dimensions
+Z_SLICE = 5
+
+def get_normalised_frame(frame, dimension):
+    amplitude = frame[dimension]
     max_amp = np.max(amplitude)
-    norm_frame = amplitude[1] / max_amp
+    norm_frame = amplitude[Z_SLICE] / max_amp
 
     return norm_frame
 
-# Settings
-n_frames = 62
-input_dir = './main.out'
-output_video = 'spin_wave_cv2.mp4'
-fps = 10
-
 # Size of the video (we'll infer it from the first frame)
-first_frame = np.load(os.path.join(input_dir, 'm000000.npy'))
-height, width = get_normalised_frame(first_frame).shape
+first_frame = np.load(os.path.join(INPUT_DIR, 'm000000.npy'))
+height, width = get_normalised_frame(first_frame, DIMENSION).shape
 
 # Prepare video writer (1920x1080 fallback if needed)
 video_writer = cv2.VideoWriter(
-    output_video,
+    OUTPUT_VIDEO,
     cv2.VideoWriter_fourcc(*'mp4v'),  # codec
-    fps,
+    FPS,
     (width, height)
 )
 
@@ -38,12 +45,12 @@ def to_bgr_image(data_2d):
     return bgr_img
 
 # Loop through frames
-for i in range(n_frames):
-    filename = os.path.join(input_dir, f'm{i:06d}.npy')
+for i in range(FRAME_COUNT):
+    filename = os.path.join(INPUT_DIR, f'm{i:06d}.npy')
     data = np.load(filename)
-    frame_bgr = to_bgr_image(get_normalised_frame(data))
+    frame_bgr = to_bgr_image(get_normalised_frame(data, DIMENSION))
     resized = cv2.resize(frame_bgr, (width, height))
     video_writer.write(resized)
 
 video_writer.release()
-print(f'Video saved to {output_video}')
+print(f'Video saved to {OUTPUT_VIDEO}')
