@@ -5,3 +5,4 @@ Some notes:
 - Stuff left:
   - Building the DBS algorithm to actually make sure the multiplexer is functioning
   - Adding more damping zones towards the end? got lazy tho
+  - Remove `DIMENSION` from the python files since im only using one layer thats 100nm thick now

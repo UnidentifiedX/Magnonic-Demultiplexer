@@ -1,5 +1,5 @@
-SetCellSize(10e-9, 10e-9, 10e-9) // 10nm3 resolution
-SetGridSize(500, 100, 10) // 5um x 1um x 100 nm => 1um for design region, 2um for waveguides
+SetCellSize(10e-9, 10e-9, 100e-9) // 10nm3 resolution, 100nm for z-layer (single-layer)
+SetGridSize(500, 100, 1) // 5um x 1um x 100 nm => 1um for design region, 2um for waveguides
 B_ext = Vector(0, 0, 200e-3) // 200mT magnetisation
 Msat = 0 // default: no magnetisation saturation
 Aex = 3.5e-12 // J/m
@@ -52,7 +52,7 @@ AutoSave(m.Region(7), 50e-12)
 AutoSave(m.Region(8), 50e-12)
 
 // Excitation region
-DefRegion(5, xrange(-2.0e-6, -1.9e-6))
-B_ext.SetRegion(5, Vector(0, 0.1e-3 * (sin(2 * pi * 2.6e9 * t) + sin(2 * pi * 2.8e9 * t)), 200e-3)) // excitation: 0.1 mT @ 2.6, 2.8 GHz in y-direction, 200mT in z-direction
+DefRegion(9, xrange(-2.0e-6, -1.9e-6))
+B_ext.SetRegion(9, Vector(0, 0.1e-3 * (sin(2 * pi * 2.6e9 * t) + sin(2 * pi * 2.8e9 * t)), 200e-3)) // excitation: 0.1 mT @ 2.6, 2.8 GHz in y-direction, 200mT in z-direction
 
-Run(6e-9)
+Run(120e-9)

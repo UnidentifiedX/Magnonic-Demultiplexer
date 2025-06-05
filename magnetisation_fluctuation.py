@@ -12,10 +12,10 @@ class Dimension(Enum):
 # settings
 INPUT_DIR = './main.out'
 OUTPUT_VIDEO = 'fluctuation_video.mp4'
-FRAME_COUNT = 41
+FRAME_COUNT = 2401
 FPS = 10
 DIMENSION = Dimension.X.value
-Z_SLICE = 5
+Z_SLICE = 0
 FILE_PREFIX = "m"
 
 ref_frame = np.load(os.path.join(INPUT_DIR, f'{FILE_PREFIX}000000.npy'))[DIMENSION, Z_SLICE]
