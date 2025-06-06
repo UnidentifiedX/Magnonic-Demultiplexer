@@ -8,23 +8,21 @@ class Dimension(Enum):
     Y = 1
     Z = 2
 
-UPPER_WAVEGUIDE_FILE_PREFIX = "m.region7"
-LOWER_WAVEGUIDE_FILE_PREFIX = ""
+FILE_PREFIX = "m"
 INPUT_DIR = './main.out'
-Z_SLICE = 0
 DT = 50e-12
 FRAME_COUNT = 2401
 DIMENSION = Dimension.X
 
-def get_fft(x: tuple, y: tuple, window: tuple, path):
+def get_fft(x: tuple, y: tuple, window: tuple):
     x_start, x_end = x
     y_start, y_end = y
     signal_start, signal_end = window
     signal = []
 
     for i in range(FRAME_COUNT):
-        data = np.load(os.path.join(INPUT_DIR, f'{path}{i:06d}.npy'))  # shape: (3, Nz, Ny, Nx)
-        slice_2d = data[DIMENSION.value, Z_SLICE, y_start:y_end, x_start:x_end]
+        data = np.load(os.path.join(INPUT_DIR, f'{FILE_PREFIX}{i:06d}.npy'))  # shape: (3, Nz, Ny, Nx)
+        slice_2d = data[DIMENSION.value, 0, y_start:y_end, x_start:x_end] # 0 becuase there is only one Z layer
         avg_val = np.mean(slice_2d)
         signal.append(avg_val)
     
@@ -51,9 +49,7 @@ def get_fft(x: tuple, y: tuple, window: tuple, path):
     return freqs, fft_magnitude
 
 # Run FFT
-top_waveguide_frequencies, top_waveguide_magnitudes = get_fft(
-    (440, 450), (70, 100), (200, FRAME_COUNT), UPPER_WAVEGUIDE_FILE_PREFIX
-)
+top_waveguide_frequencies, top_waveguide_magnitudes = get_fft((448, 450), (70, 100), (200, FRAME_COUNT))
 
 # Plot FFT
 plt.figure(figsize=(8, 5))
@@ -77,13 +73,13 @@ plt.show()
 # y_start, y_end = 70, 100
 
 # # === LOAD DATA ===
-# data = np.load(os.path.join(INPUT_DIR, f'{UPPER_WAVEGUIDE_FILE_PREFIX}000000.npy'))[Dimension.Z.value, Z_SLICE]
+# data = np.load(os.path.join(INPUT_DIR, f'{FILE_PREFIX}000220.npy'))[Dimension.X.value, 0]
 
 # # === PLOT ===
 # plt.figure(figsize=(10, 4))
 # plt.imshow(data, cmap='seismic', origin='lower')  # transpose for correct x-y orientation
 # plt.colorbar(label='Magnetisation (arb. units)')
-# plt.title(f'm[{["x", "y", "z"][Dimension.Z.value]}] at Z-slice {Z_SLICE}')
+# plt.title(f'm[{["x", "y", "z"][Dimension.X.value]}]')
 
 # # Draw detector box
 # plt.axvline(x_start, color='lime', linestyle='--')

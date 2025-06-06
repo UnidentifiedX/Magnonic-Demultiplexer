@@ -36,20 +36,15 @@ alpha.SetRegion(6, 0.5)
 
 // ================ OUTPUT DETECTORS ================
 
-DefRegion(7, Cuboid(0.1e-6, 300e-9, 100e-9).Transl(1.95e-6, 350e-9, 0)) // top waveguide detection zone
-DefRegion(8, Cuboid(0.1e-6, 300e-9, 100e-9).Transl(1.95e-6, -350e-9, 0)) // bottom waveguide detection zone
+// DefRegion(7, Cuboid(0.1e-6, 300e-9, 100e-9).Transl(1.95e-6, 350e-9, 0)) // top waveguide detection zone
+// DefRegion(8, Cuboid(0.1e-6, 300e-9, 100e-9).Transl(1.95e-6, -350e-9, 0)) // bottom waveguide detection zone
 
 // ============= RUNNING THE SIMULATION =============
 
 Relax()
-// Save relaxed states
-Save(m)
-Save(m.Region(7))
-Save(m.Region(8))
 
+Save(m)
 AutoSave(m, 50e-12)
-AutoSave(m.Region(7), 50e-12)
-AutoSave(m.Region(8), 50e-12)
 
 // Excitation region
 DefRegion(9, xrange(-2.0e-6, -1.9e-6))
