@@ -39,6 +39,9 @@ alpha.SetRegion(6, 0.5)
 // DefRegion(7, Cuboid(0.1e-6, 300e-9, 100e-9).Transl(1.95e-6, 350e-9, 0)) // top waveguide detection zone
 // DefRegion(8, Cuboid(0.1e-6, 300e-9, 100e-9).Transl(1.95e-6, -350e-9, 0)) // bottom waveguide detection zone
 
+// Msat.SetRegion(7, 140e3)
+// Msat.SetRegion(8, 140e3)
+
 // ============= RUNNING THE SIMULATION =============
 
 Relax()
@@ -49,5 +52,6 @@ AutoSave(m, 50e-12)
 // Excitation region
 DefRegion(9, xrange(-2.0e-6, -1.9e-6))
 B_ext.SetRegion(9, Vector(0, 0.1e-3 * (sin(2 * pi * 2.6e9 * t) + sin(2 * pi * 2.8e9 * t)), 200e-3)) // excitation: 0.1 mT @ 2.6, 2.8 GHz in y-direction, 200mT in z-direction
+Msat.SetRegion(9, 140e3)
 
 Run(120e-9)
