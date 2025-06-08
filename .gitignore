@@ -1,3 +1,6 @@
-main.out/*
+*.out/*
 frames/*
 *.mp4
+
+output/*
+__pycache__/
