@@ -10,9 +10,9 @@ class Dimension(Enum):
     Z = 2
 
 # settings
-INPUT_DIR = './main.out'
+INPUT_DIR = './template.out'
 OUTPUT_VIDEO = 'fluctuation_video.mp4'
-FRAME_COUNT = 2401
+FRAME_COUNT = 1001
 FPS = 10
 DIMENSION = Dimension.X.value
 FILE_PREFIX = "m"
