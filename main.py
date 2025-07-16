@@ -8,14 +8,17 @@ M0 = np.random.choice([0, 1], size=(50, 50)) * 2 # 2 because design region area 
 # LENGTH = 500
 # HEIGHT = 100
 # X_OFFSET = 200
+TEMPLATE_PATH = './template.mx3'
 OUTPUT_DIR = './output'
+FRAME_COUNT = 1001
+MAX_ITERATIONS = 2
 
 shutil.rmtree(OUTPUT_DIR, ignore_errors=True)  # Clear output directory if it exists
-os.mkdir(OUTPUT_DIR)
+os.makedirs(OUTPUT_DIR, exist_ok=True)  # Create output directory
 
 M_output, final_score = direct_binary_search(initial_M=M0, 
-                                             template_path='./template.mx3',
+                                             template_path=TEMPLATE_PATH,
                                              output_path=OUTPUT_DIR,
-                                             frame_count=1001,
-                                             max_iterations=2,
+                                             frame_count=FRAME_COUNT,
+                                             max_iterations=MAX_ITERATIONS,
                                              tolerance=0.01)

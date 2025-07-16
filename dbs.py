@@ -5,6 +5,8 @@ from objective_function import evaluate_objective
 import time
 import shutil
 
+MAGNETISATION_FLIP = 2  # The value to flip the magnetisation, assuming design region area is 2
+
 def direct_binary_search(initial_M, template_path, output_path, frame_count, max_iterations=1000, tolerance=0.01):
     M = initial_M.copy()
     best_score = 0
@@ -24,17 +26,17 @@ def direct_binary_search(initial_M, template_path, output_path, frame_count, max
             os.mkdir(output_folder)
             file_path = os.path.join(output_folder, f"{j:06d}.mx3")
 
-            M[y, x] = 2 - M[y, x]  # Flip the magnetisation at (y, x), 2 because design region area is 2
+            M[y, x] = MAGNETISATION_FLIP - M[y, x]  # Flip the magnetisation at (y, x), 2 because design region area is 2
             generate_mx3(M, file_path, template_path=template_path)
             output = run_mx3(file_path, output_folder)
             score = evaluate_objective(f"{output_folder}/{j:06d}.out", frame_count=frame_count)
 
-            if score > best_score + tolerance:
+            if best_score == 0 or (score - best_score) / best_score > tolerance: # percentage improvement
                 best_score = score
                 improvement = True
                 print(f"[Iteration {i} change {j}] Accepted flip at ({y}, {x}), score: {score}, time taken: {time.time() - start:.2f}s")
             else:
-                M[y, x] = 2 - M[y, x] # Revert the flip if no improvement, 2 because design region area is 2
+                M[y, x] = MAGNETISATION_FLIP - M[y, x] # Revert the flip if no improvement, 2 because design region area is 2
                 shutil.rmtree(output_folder)  # Clean up the output folder
                 print(f"[Iteration {i} change {j}] Rejected flip at ({y}, {x}), score: {score}, time taken: {time.time() - start:.2f}s")
 

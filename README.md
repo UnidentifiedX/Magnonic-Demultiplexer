@@ -7,3 +7,4 @@ Some notes:
   - [ ] Adding more damping zones towards the end? got lazy tho
   - [x] Remove `DIMENSION` from the python files since im only using one layer thats 100nm thick now
   - [ ] Nice output colours
+  - [ ] Maybe explore tolerance decay? (if percentage change doesnt work)

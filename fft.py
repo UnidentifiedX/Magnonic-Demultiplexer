@@ -5,7 +5,7 @@ from enum import Enum
 import collections
 from mx3_utils import Dimension
 
-def get_fft(x_range: tuple, y_range: tuple, window: tuple, input_dir: str, frame_count: int, dt: int, dimension: 'Dimension', graph_name, normalized=True, debug=False, save_graphs=True):
+def get_fft(x_range: tuple, y_range: tuple, window: tuple, input_dir: str, frame_count: int, dt: int, dimension: 'Dimension', graph_name, normalized=False, debug=False, save_graphs=True):
     x_start, x_end = x_range
     y_start, y_end = y_range
     signal_start, signal_end = window
@@ -45,9 +45,6 @@ def get_fft(x_range: tuple, y_range: tuple, window: tuple, input_dir: str, frame
     freqs = np.fft.rfftfreq(N, d=dt)
     magnitudes = np.abs(fft)
 
-    if normalized:
-        magnitudes /= np.max(magnitudes)  # Normalize magnitudes to [0, 1]
-
     if debug or save_graphs:
         # Plot FFT
         plt.figure(figsize=(8, 5))
@@ -75,6 +72,12 @@ def get_fft(x_range: tuple, y_range: tuple, window: tuple, input_dir: str, frame
     bin_dict = collections.defaultdict(float)
     for f, mag in zip(binned_freqs, magnitudes):
         bin_dict[f] += mag
+
+    if normalized:
+        total = sum(bin_dict.values())
+        if total > 0:
+            for f in bin_dict:
+                bin_dict[f] /= total
 
     return bin_dict
 
