@@ -7,7 +7,7 @@ import shutil
 
 MAGNETISATION_FLIP = 2  # The value to flip the magnetisation, assuming design region area is 2
 
-def direct_binary_search(initial_M, template_path, output_path, frame_count, max_iterations=1000, tolerance=0.01):
+def direct_binary_search(initial_M, mx3_path, mx3_convert_path, template_path, output_path, frame_count, max_iterations=1000, tolerance=0.01):
     M = initial_M.copy()
     best_score = 0
     
@@ -28,17 +28,17 @@ def direct_binary_search(initial_M, template_path, output_path, frame_count, max
 
             M[y, x] = MAGNETISATION_FLIP - M[y, x]  # Flip the magnetisation at (y, x), 2 because design region area is 2
             generate_mx3(M, file_path, template_path=template_path)
-            output = run_mx3(file_path, output_folder)
+            output = run_mx3(mx3_path=mx3_path, mx3_convert_path=mx3_convert_path, mx3_file_path=file_path, output_dir=output_folder)
             score = evaluate_objective(f"{output_folder}/{j:06d}.out", frame_count=frame_count)
 
-            if best_score == 0 or (score - best_score) / best_score > tolerance: # percentage improvement
+            if score > 0 and (best_score == 0 or (score - best_score) / best_score > tolerance):  # Only accept if score is positive and improves
+                print(f"[Iteration {i} change {j}] Accepted flip at ({y}, {x}), score: {score}, time taken: {time.time() - start:.2f}s; Difference: {score - best_score}")
                 best_score = score
                 improvement = True
-                print(f"[Iteration {i} change {j}] Accepted flip at ({y}, {x}), score: {score}, time taken: {time.time() - start:.2f}s")
             else:
+                print(f"[Iteration {i} change {j}] Rejected flip at ({y}, {x}), score: {score}, time taken: {time.time() - start:.2f}s")
                 M[y, x] = MAGNETISATION_FLIP - M[y, x] # Revert the flip if no improvement, 2 because design region area is 2
                 shutil.rmtree(output_folder)  # Clean up the output folder
-                print(f"[Iteration {i} change {j}] Rejected flip at ({y}, {x}), score: {score}, time taken: {time.time() - start:.2f}s")
 
         if not improvement:
             print(f"No improvement in iteration {i}, stopping search.")

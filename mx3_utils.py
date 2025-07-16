@@ -34,12 +34,12 @@ def generate_mx3(M, output_path, template_path, X_OFFSET=100, HEIGHT=50):
         output_file.seek(0)
         output_file.write(content)
 
-def run_mx3(mx3_path, output_dir):
-    mx3_result = subprocess.run(['mumax3', mx3_path], capture_output=True, text=True)
+def run_mx3(mx3_path, mx3_convert_path, mx3_file_path, output_dir):
+    mx3_result = subprocess.run([mx3_path, mx3_file_path], capture_output=True, text=True)
     
     if mx3_result.returncode == 0:
         mx3_convert_result = subprocess.run(
-            f"mumax3-convert -numpy {output_dir}/**/*.ovf",
+            f"{mx3_convert_path} -numpy {output_dir}/**/*.ovf",
             shell=True, capture_output=True, text=True
         )
     else:
