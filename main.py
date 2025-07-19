@@ -13,7 +13,7 @@ MX3_CONVERT_PATH = 'mumax3-convert'
 TEMPLATE_PATH = './template.mx3'
 OUTPUT_DIR = './output'
 FRAME_COUNT = 1001
-MAX_ITERATIONS = 2
+MAX_ITERATIONS = 10
 TOLERANCE = 0.01
 
 shutil.rmtree(OUTPUT_DIR, ignore_errors=True)  # Clear output directory if it exists

@@ -6,42 +6,53 @@ import time
 import shutil
 
 MAGNETISATION_FLIP = 2  # The value to flip the magnetisation, assuming design region area is 2
+FLUSH_INTERVAL = 50  # Interval to flush the output file
 
 def direct_binary_search(initial_M, mx3_path, mx3_convert_path, template_path, output_path, frame_count, max_iterations=1000, tolerance=0.01):
     M = initial_M.copy()
     best_score = 0
-    
-    for i in range(max_iterations):
-        improvement = False
-        coords = [(i, j) for i in range(M.shape[0]) for j in range(M.shape[1])]
-        np.random.shuffle(coords)
 
-        run_folder = os.path.join(output_path, f"{i:06d}")
-        os.mkdir(run_folder)
+    with open(os.path.join(output_path, 'scores.csv'), 'w') as f:
+        f.write("Iteration,Change,Flipped?,Score,Time\n")
 
-        for j, (y, x) in enumerate(coords):
-            start = time.time()
+        for i in range(max_iterations):
+            improvement = False
+            coords = [(i, j) for i in range(M.shape[0]) for j in range(M.shape[1])]
+            np.random.shuffle(coords)
 
-            output_folder = os.path.join(run_folder, f"{j:06d}")
-            os.mkdir(output_folder)
-            file_path = os.path.join(output_folder, f"{j:06d}.mx3")
+            run_folder = os.path.join(output_path, f"{i:06d}")
+            os.mkdir(run_folder)
 
-            M[y, x] = MAGNETISATION_FLIP - M[y, x]  # Flip the magnetisation at (y, x), 2 because design region area is 2
-            generate_mx3(M, file_path, template_path=template_path)
-            output = run_mx3(mx3_path=mx3_path, mx3_convert_path=mx3_convert_path, mx3_file_path=file_path, output_dir=output_folder)
-            score = evaluate_objective(f"{output_folder}/{j:06d}.out", frame_count=frame_count)
+            for j, (y, x) in enumerate(coords):
+                start = time.time()
 
-            if score > 0 and (best_score == 0 or (score - best_score) / best_score > tolerance):  # Only accept if score is positive and improves
-                print(f"[Iteration {i} change {j}] Accepted flip at ({y}, {x}), score: {score}, time taken: {time.time() - start:.2f}s; Difference: {score - best_score}")
-                best_score = score
-                improvement = True
-            else:
-                print(f"[Iteration {i} change {j}] Rejected flip at ({y}, {x}), score: {score}, time taken: {time.time() - start:.2f}s")
-                M[y, x] = MAGNETISATION_FLIP - M[y, x] # Revert the flip if no improvement, 2 because design region area is 2
-                shutil.rmtree(output_folder)  # Clean up the output folder
+                output_folder = os.path.join(run_folder, f"{j:06d}")
+                os.mkdir(output_folder)
+                file_path = os.path.join(output_folder, f"{j:06d}.mx3")
 
-        if not improvement:
-            print(f"No improvement in iteration {i}, stopping search.")
-            break
+                M[y, x] = MAGNETISATION_FLIP - M[y, x]  # Flip the magnetisation at (y, x), 2 because design region area is 2
+                generate_mx3(M, file_path, template_path=template_path)
+                output = run_mx3(mx3_path=mx3_path, mx3_convert_path=mx3_convert_path, mx3_file_path=file_path, output_dir=output_folder)
+                score = evaluate_objective(f"{output_folder}/{j:06d}.out", frame_count=frame_count)
+
+                if score > 0 and (best_score == 0 or (score - best_score) / best_score > tolerance):  # Only accept if score is positive and improves
+                    print(f"[Iteration {i} change {j}] Accepted flip at ({y}, {x}), score: {score}, time taken: {time.time() - start:.2f}s; Difference: {score - best_score}")
+                    best_score = score
+                    improvement = True
+
+                    f.write(f"{i},{j},{True},{score},{time.time() - start}\n")
+                else:
+                    print(f"[Iteration {i} change {j}] Rejected flip at ({y}, {x}), score: {score}, time taken: {time.time() - start:.2f}s")
+                    M[y, x] = MAGNETISATION_FLIP - M[y, x] # Revert the flip if no improvement, 2 because design region area is 2
+                    shutil.rmtree(output_folder)  # Clean up the output folder
+
+                    f.write(f"{i},{j},{False},{score},{time.time() - start}\n")
+
+                if j % FLUSH_INTERVAL == 0:
+                    f.flush()
+
+            if not improvement:
+                print(f"No improvement in iteration {i}, stopping search.")
+                break
 
     return M, best_score
