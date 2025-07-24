@@ -1,6 +1,7 @@
 *.out/*
 frames/*
 *.mp4
+*.csv
 
 output/*
 __pycache__/
