@@ -39,6 +39,7 @@ def direct_binary_search(initial_M, mx3_path, mx3_convert_path, template_path, o
                     print(f"[Iteration {i} change {j}] Accepted flip at ({y}, {x}), score: {score}, time taken: {time.time() - start:.2f}s; Difference: {score - best_score}")
                     best_score = score
                     improvement = True
+                    shutil.rmtree(f"{output_folder}/{j:06d}.out")
 
                     f.write(f"{i},{j},{True},{score},{time.time() - start}\n")
                 else:
