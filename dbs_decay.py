@@ -10,7 +10,7 @@ FLUSH_INTERVAL = 50  # Interval to flush the output file
 
 def get_patch_coords(M, patch_size):
     h, w = M
-    return [(i, j) for i in range(0, h, patch_size) for j in range(0, w, patch_size)]
+    return [(i, j) for i in range(0, h - patch_size + 1) for j in range(0, w - patch_size + 1)]
 
 def flip_patch(M, y, x, patch_size):
     M[y:y+patch_size, x:x+patch_size] = MAGNETISATION_FLIP - M[y:y+patch_size, x:x+patch_size]
@@ -46,14 +46,14 @@ def direct_binary_search_decay(initial_M, mx3_path, mx3_convert_path, template_p
                 score = evaluate_objective(f"{output_folder}/{j:06d}.out", frame_count=frame_count)
 
                 if score > 0 and (best_score == 0 or (score - best_score) / best_score > tolerance):  # Only accept if score is positive and improves
-                    print(f"[Iteration {i} change {j}] Accepted flip at ({y}, {x}), score: {score}, time taken: {time.time() - start:.2f}s; Difference: {score - best_score}")
+                    print(f"[Iteration {i} change {j}] Accepted flip at ({y}, {x}), score: {score}, time taken: {time.time() - start:.2f}s; Difference: {score - best_score}; Patch size: {patch_size}")
                     best_score = score
                     improvement = True
                     shutil.rmtree(f"{output_folder}/{j:06d}.out")
 
                     f.write(f"{i},{j},{True},{score},{time.time() - start}\n")
                 else:
-                    print(f"[Iteration {i} change {j}] Rejected flip at ({y}, {x}), score: {score}, time taken: {time.time() - start:.2f}s")
+                    print(f"[Iteration {i} change {j}] Rejected flip at ({y}, {x}), score: {score}, time taken: {time.time() - start:.2f}s; Patch size: {patch_size}")
                     M = flip_patch(M, y, x, patch_size) # Revert the flip if no improvement
                     shutil.rmtree(output_folder)  # Clean up the output folder
 
