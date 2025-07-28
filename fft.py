@@ -118,33 +118,18 @@ if __name__ == "__main__":
     print(top_waveguide_frequencies[2.6e9], top_waveguide_frequencies[2.8e9])
     print(bottom_waveguide_frequencies[2.6e9], bottom_waveguide_frequencies[2.8e9])
 
-# sorted_bins = sorted(top_waveguide_frequencies.items())  # sort by frequency
-# bin_freqs, bin_magnitudes = zip(*sorted_bins)
-
-# # Convert to GHz for plotting
-# bin_freqs_ghz = np.array(bin_freqs) * 1e-9
-
-# # Plot
-# plt.figure(figsize=(8, 4))
-# plt.bar(bin_freqs_ghz, bin_magnitudes, width=0.08, align='center', color='skyblue', edgecolor='black')
-# plt.xlabel("Frequency (GHz)")
-# plt.ylabel("Integrated Amplitude")
-# plt.title("Binned FFT Magnitudes (100 MHz bins)")
-# plt.grid(True)
-# plt.tight_layout()
-# plt.show()
-
-    # ======================== SANITY CHECK ========================
-    # === Detector box (grid indices) ===
+    # # ======================== SANITY CHECK ========================
+    # # === Detector box (grid indices) ===
     # x_start, x_end = 224, 225
     # y_start, y_end = 35, 50
 
     # # === LOAD DATA ===
-    # data = np.load(os.path.join(INPUT_DIR, f'{FILE_PREFIX}000220.npy'))[Dimension.X.value, 0]
+    # data = np.load(os.path.join(INPUT_DIR, f'{FILE_PREFIX}001000.npy'))[Dimension.X.value, 0]
 
     # # === PLOT ===
     # plt.figure(figsize=(10, 4))
-    # plt.imshow(data, cmap='seismic', origin='lower')
+    # vabs = np.max(np.abs(data))
+    # plt.imshow(data, cmap='seismic', vmin=-vabs, vmax=vabs, origin='lower')
     # plt.colorbar(label='Magnetisation (arb. units)')
     # plt.title(f'm[{["x", "y", "z"][Dimension.X.value]}]')
 
