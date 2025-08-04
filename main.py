@@ -22,23 +22,23 @@ PATCH_DECAY_INTERVAL = 1
 shutil.rmtree(OUTPUT_DIR, ignore_errors=True)  # Clear output directory if it exists
 os.makedirs(OUTPUT_DIR, exist_ok=True)  # Create output directory
 
-# M_output, final_score = direct_binary_search(initial_M=M0,
-#                                              mx3_path=MX3_PATH,
-#                                              mx3_convert_path=MX3_CONVERT_PATH,
-#                                              template_path=TEMPLATE_PATH,
-#                                              output_path=OUTPUT_DIR,
-#                                              frame_count=FRAME_COUNT,
-#                                              max_iterations=MAX_ITERATIONS,
-#                                              tolerance=TOLERANCE)
-M_output, final_score = direct_binary_search_decay(
-    initial_M=M0,
-    mx3_path=MX3_PATH,
-    mx3_convert_path=MX3_CONVERT_PATH,
-    template_path=TEMPLATE_PATH,
-    output_path=OUTPUT_DIR,
-    frame_count=FRAME_COUNT,
-    max_iterations=MAX_ITERATIONS,
-    tolerance=TOLERANCE,
-    initial_patch_size=INITIAL_PATCH_SIZE,  # Initial patch size for decay
-    patch_decay_interval=PATCH_DECAY_INTERVAL   # Decay interval for patch size
-)
+M_output, final_score = direct_binary_search(initial_M=M0,
+                                             mx3_path=MX3_PATH,
+                                             mx3_convert_path=MX3_CONVERT_PATH,
+                                             template_path=TEMPLATE_PATH,
+                                             output_path=OUTPUT_DIR,
+                                             frame_count=FRAME_COUNT,
+                                             max_iterations=MAX_ITERATIONS,
+                                             tolerance=TOLERANCE)
+# M_output, final_score = direct_binary_search_decay(
+#     initial_M=M0,
+#     mx3_path=MX3_PATH,
+#     mx3_convert_path=MX3_CONVERT_PATH,
+#     template_path=TEMPLATE_PATH,
+#     output_path=OUTPUT_DIR,
+#     frame_count=FRAME_COUNT,
+#     max_iterations=MAX_ITERATIONS,
+#     tolerance=TOLERANCE,
+#     initial_patch_size=INITIAL_PATCH_SIZE,  # Initial patch size for decay
+#     patch_decay_interval=PATCH_DECAY_INTERVAL   # Decay interval for patch size
+# )

@@ -1,3 +1,4 @@
+from io import TextIOWrapper
 import subprocess
 from enum import Enum
 
@@ -5,6 +6,12 @@ class Dimension(Enum):
     X = 0
     Y = 1
     Z = 2
+
+def write_log_headers(f: TextIOWrapper):
+    f.write("Index,Iteration,Change,Flipped?,Score,Time\n")
+
+def write_log(f: TextIOWrapper, index: int, iteration: int, change: int, flipped: bool, score: float, time: float):
+    f.write(f"{index},{iteration},{change},{flipped},{score},{time}\n")
 
 def generate_mx3(M, output_path, template_path, X_OFFSET=100, HEIGHT=50):
     """
