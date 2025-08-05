@@ -4,6 +4,7 @@ import mx3_utils
 from objective_function import evaluate_objective
 import time
 import shutil
+import glob
 
 MAGNETISATION_FLIP = 2  # The value to flip the magnetisation, assuming design region area is 2
 FLUSH_INTERVAL = 50  # Interval to flush the output file
@@ -52,13 +53,17 @@ def direct_binary_search_decay(initial_M, mx3_path, mx3_convert_path, template_p
                     best_score = score
                     improvement = True
                     flipped = True
-                    shutil.rmtree(f"{output_folder}/{j:06d}.out")                   
+
+                    for file in glob.glob(f"{output_folder}/{j:06d}.out/*.jpg"):
+                        shutil.move(file, output_folder)
+                    shutil.rmtree(f"{output_folder}/{j:06d}.out")
                 else:
                     print(f"[Iteration {i} change {j}] Rejected flip at ({y}, {x}), score: {score}, time taken: {time.time() - start:.2f}s; Patch size: {patch_size}")
                     M = flip_patch(M, y, x, patch_size) # Revert the flip if no improvement
                     shutil.rmtree(output_folder)  # Clean up the output folder
 
-                mx3_utils.write_log(index=index, 
+                mx3_utils.write_log(f=f,
+                                    index=index, 
                                     iteration=i, 
                                     change=j,
                                     flipped=flipped,
@@ -73,6 +78,7 @@ def direct_binary_search_decay(initial_M, mx3_path, mx3_convert_path, template_p
                     patch_size -= 1  # Reduce patch size if no improvement
                 else:
                     print(f"No improvement in iteration {i}, stopping search.")
+                    f.flush()
                     break
 
     return M, best_score

@@ -6,7 +6,7 @@ from dbs import direct_binary_search
 from dbs_decay import direct_binary_search_decay
 
 # M0 = mx3_utils.generate_random_grid(cell_size=1, grid_size=(50, 50), choices=[0, 1]) * 2 # 2 because design region area is 2
-M0 = mx3_utils.generate_random_grid(cell_size=10, grid_size=(50, 50), choices=[0, 1]) * 2  # 2 because design region area is 2
+M0 = mx3_utils.generate_random_grid(cell_size=5, grid_size=(50, 50), choices=[0, 1]) * 2  # 2 because design region area is 2
 
 MX3_PATH = 'mumax3'
 MX3_CONVERT_PATH = 'mumax3-convert'
