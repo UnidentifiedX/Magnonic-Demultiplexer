@@ -1,6 +1,7 @@
 from io import TextIOWrapper
 import subprocess
 from enum import Enum
+import numpy as np
 
 class Dimension(Enum):
     X = 0
@@ -12,6 +13,24 @@ def write_log_headers(f: TextIOWrapper):
 
 def write_log(f: TextIOWrapper, index: int, iteration: int, change: int, flipped: bool, score: float, time: float):
     f.write(f"{index},{iteration},{change},{flipped},{score},{time}\n")
+
+def generate_random_grid(cell_size: int, grid_size: tuple[int, int], choices: list[int]) -> np.ndarray:
+    """
+    Generates a 2D grid where each block of size (cell_size x cell_size)
+    is filled with the same random value from `choices`.
+
+    Parameters:
+    - cell_size: size of each square block (e.g., 10)
+    - grid_size: full grid size as (height, width) in cells (e.g., (50, 50))
+    - choices: list of values to choose from (e.g., [0, 2])
+
+    Returns:
+    - A 2D NumPy array of shape grid_size filled with blocks of consistent values
+    """
+    block_shape = (grid_size[0] // cell_size, grid_size[1] // cell_size)
+    block_values = np.random.choice(choices, size=block_shape)
+    full_grid = np.kron(block_values, np.ones((cell_size, cell_size), dtype=int))
+    return full_grid
 
 def generate_mx3(M, output_path, template_path, X_OFFSET=100, HEIGHT=50):
     """
