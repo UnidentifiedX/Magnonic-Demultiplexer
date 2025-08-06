@@ -42,7 +42,7 @@ Save(m)
 AutoSave(m, 50e-12)
 
 // Excitation region
-DefRegion(9, xrange(-2.0e-6, -1.9e-6))
+DefRegion(9, xrange(-2.0e-6, -1.9e-6).intersect(multiplexer))
 B_ext.SetRegion(9, Vector(0, 0.1e-3 * (sin(2 * pi * 2.6e9 * t) + sin(2 * pi * 2.8e9 * t)), 200e-3)) // excitation: 0.1 mT @ 2.6, 2.8 GHz in y-direction, 200mT in z-direction
 Msat.SetRegion(9, 140e3)
 
