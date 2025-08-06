@@ -22,7 +22,7 @@ def direct_binary_search_decay(initial_M, mx3_path, mx3_convert_path, template_p
     best_score = 0
 
     with open(os.path.join(output_path, 'scores.csv'), 'w') as f:
-        mx3_utils.write_log_headers()
+        mx3_utils.write_log_headers(f)
         index = 0
         patch_size = initial_patch_size
 
